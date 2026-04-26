@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STC THR33CROWN3D · 9863S · VEX IQ Robotics · Surrey, England</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --white: #f5f3ee;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dim: #7a6028;
+    --red: #c0392b;
+    --gray-1: #111111;
+    --gray-2: #1c1c1c;
+    --gray-3: #2a2a2a;
+    --gray-4: #444;
+    --gray-5: #888;
+    --gray-6: #aaa;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.35;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 64px;
+    background: rgba(8,8,8,0.92);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--white); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 400;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gray-6); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 120px 80px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 40% at 20% 80%, rgba(192,57,43,0.04) 0%, transparent 60%),
+      linear-gradient(180deg, #080808 0%, #0f0e0b 100%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 60% 40%, black 30%, transparent 80%);
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    position: relative; z-index: 1;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9; letter-spacing: 4px;
+    position: relative; z-index: 1;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title .crown { color: var(--gold); }
+  .hero-title .dim { color: var(--gray-4); }
+
+  .hero-sub {
+    font-size: 16px; font-weight: 300;
+    color: var(--gray-6); margin-top: 28px; max-width: 500px;
+    position: relative; z-index: 1;
+    opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+    line-height: 1.7;
+  }
+
+  .hero-stats {
+    display: flex; gap: 48px; margin-top: 56px;
+    position: relative; z-index: 1;
+    opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; line-height: 1; color: var(--gold);
+  }
+  .hero-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gray-5);
+    margin-top: 4px;
+  }
+
+  .hero-cta {
+    display: flex; gap: 16px; margin-top: 48px;
+    position: relative; z-index: 1;
+    opacity: 0; animation: fadeUp 0.8s 1s forwards;
+  }
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    text-decoration: none; border: none; cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-outline {
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 400;
+    letter-spacing: 3px; text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+  /* ── SECTION BASE ── */
+  section { padding: 100px 80px; position: relative; }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after {
+    content: ''; flex: 0 0 40px; height: 1px; background: var(--gold-dim);
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    letter-spacing: 2px; line-height: 1; color: var(--white);
+    margin-bottom: 48px;
+  }
+
+  /* ── ACHIEVEMENTS ── */
+  #achievements { background: var(--gray-1); }
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2px;
+  }
+  .achievement-card {
+    background: var(--gray-2);
+    padding: 36px 32px;
+    position: relative; overflow: hidden;
+    transition: background 0.2s;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards;
+  }
+  .achievement-card:hover { background: var(--gray-3); }
+  .achievement-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .achievement-card:hover::before { opacity: 1; }
+  .achievement-icon {
+    font-size: 32px; margin-bottom: 16px;
+    display: block;
+  }
+  .achievement-event {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .achievement-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 1px; color: var(--white);
+    margin-bottom: 8px;
+  }
+  .achievement-desc {
+    font-size: 13px; color: var(--gray-6); line-height: 1.6;
+  }
+  .achievement-num {
+    position: absolute; bottom: 24px; right: 28px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px; color: rgba(201,168,76,0.06);
+    line-height: 1; pointer-events: none;
+  }
+
+  /* ── TEAM ── */
+  #team { background: var(--black); }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2px; margin-bottom: 2px;
+  }
+  .team-bio em {
+    color: var(--gold);
+    font-style: normal;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .team-card {
+    background: var(--gray-2);
+    padding: 32px 28px;
+    position: relative; overflow: hidden;
+    opacity: 0; animation: fadeUp 0.6s forwards;
+  }
+  .team-card:hover { background: var(--gray-3); }
+  .team-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--gray-3);
+    border: 2px solid var(--gold-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; color: var(--gold);
+    margin-bottom: 18px;
+  }
+  .team-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 1px;
+    color: var(--white); margin-bottom: 6px;
+  }
+  .team-roles {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .team-bio {
+    font-size: 12px; color: var(--gray-5); line-height: 1.6;
+  }
+
+  /* ── STRATEGY ── */
+  #strategy { background: var(--gray-1); }
+  .strategy-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .strat-card {
+    background: var(--gray-2); padding: 36px 32px;
+    position: relative;
+    opacity: 0; animation: fadeUp 0.6s forwards;
+  }
+  .strat-event {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gray-5); margin-bottom: 8px;
+  }
+  .strat-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; letter-spacing: 1px;
+    color: var(--white); margin-bottom: 14px;
+  }
+  .strat-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px; color: var(--gold); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .strat-score span {
+    font-size: 16px; color: var(--gray-5);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .strat-desc { font-size: 13px; color: var(--gray-6); line-height: 1.6; }
+
+  /* ── SPONSOR SECTION ── */
+  #sponsors {
+    background: var(--black);
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+  .sponsor-pitch {
+    max-width: 680px;
+    font-size: 17px; color: var(--gray-6);
+    line-height: 1.75; margin-bottom: 56px;
+  }
+  .sponsor-pitch strong { color: var(--white); font-weight: 500; }
+
+  .sponsor-benefits {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2px; margin-bottom: 64px;
+  }
+  .benefit-card {
+    background: var(--gray-2); padding: 28px 24px;
+    border-left: 2px solid var(--gold-dim);
+  }
+  .benefit-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .benefit-desc { font-size: 13px; color: var(--gray-6); line-height: 1.6; }
+
+  .sponsor-tiers {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    margin-bottom: 56px;
+  }
+  .tier-card {
+    background: var(--gray-2); padding: 36px 28px;
+    position: relative; overflow: hidden;
+  }
+  .tier-card.featured {
+    background: var(--gray-1);
+    outline: 1px solid var(--gold-dim);
+  }
+  .tier-card.featured::before {
+    content: 'RECOMMENDED';
+    position: absolute; top: 0; right: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 2px;
+    background: var(--gold); color: var(--black);
+    padding: 4px 10px; font-weight: 700;
+  }
+  .tier-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 2px;
+    color: var(--white); margin-bottom: 4px;
+  }
+  .tier-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 44px; color: var(--gold); line-height: 1;
+    margin-bottom: 20px;
+  }
+  .tier-price sub {
+    font-size: 16px; color: var(--gray-5);
+    font-family: 'DM Sans', sans-serif; font-weight: 300;
+  }
+  .tier-features { list-style: none; margin-bottom: 0; }
+  .tier-features li {
+    font-size: 12px; color: var(--gray-6);
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .tier-features li::before {
+    content: '→'; color: var(--gold); flex-shrink: 0; font-size: 11px; margin-top: 1px;
+  }
+
+  .contact-block {
+    background: var(--gray-2);
+    padding: 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 32px; flex-wrap: wrap;
+  }
+  .contact-text h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 2px; margin-bottom: 6px;
+  }
+  .contact-text p { font-size: 14px; color: var(--gray-6); }
+  .contact-text a { color: var(--gold); text-decoration: none; }
+  .contact-text a:hover { text-decoration: underline; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--gray-1);
+    padding: 32px 80px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 3px; color: var(--gold);
+  }
+  .footer-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gray-5);
+  }
+
+  /* ── DIVIDER ── */
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+    margin: 0 80px;
+  }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    background: var(--gold); overflow: hidden;
+    padding: 10px 0;
+  }
+  .ticker {
+    display: flex; gap: 0; white-space: nowrap;
+    animation: ticker 20s linear infinite;
+  }
+  .ticker-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px; letter-spacing: 3px; color: var(--black);
+    padding: 0 32px;
+  }
+  .ticker-sep { color: rgba(0,0,0,0.3); padding: 0 4px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* stagger delays for cards */
+  .achievement-card:nth-child(1) { animation-delay: 0.1s; }
+  .achievement-card:nth-child(2) { animation-delay: 0.2s; }
+  .achievement-card:nth-child(3) { animation-delay: 0.3s; }
+  .achievement-card:nth-child(4) { animation-delay: 0.4s; }
+  .team-card:nth-child(1) { animation-delay: 0.1s; }
+  .team-card:nth-child(2) { animation-delay: 0.2s; }
+  .team-card:nth-child(3) { animation-delay: 0.3s; }
+  .team-card:nth-child(4) { animation-delay: 0.4s; }
+  .team-card:nth-child(5) { animation-delay: 0.5s; }
+  .team-card:nth-child(6) { animation-delay: 0.6s; }
+  .strat-card:nth-child(1) { animation-delay: 0.1s; }
+  .strat-card:nth-child(2) { animation-delay: 0.2s; }
+  .strat-card:nth-child(3) { animation-delay: 0.3s; }
+  .strat-card:nth-child(4) { animation-delay: 0.4s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; }
+    .strategy-grid { grid-template-columns: 1fr; }
+    .sponsor-tiers { grid-template-columns: 1fr; }
+    footer { padding: 24px; }
+    .rule { margin: 0 24px; }
+    .contact-block { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>THR33</span>CROWN3D</a>
+  <ul class="nav-links">
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#strategy">Strategy</a></li>
+    <li><a href="#sponsors">Sponsor Us</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-eyebrow">Team 9863S · Surrey, England · VEX IQ Robotics</div>
+
+  <h1 class="hero-title">
+    <span class="dim">STC</span><br>
+    <span class="crown">THR33</span><br>
+    <span>CROWN3D</span>
+  </h1>
+
+  <p class="hero-sub">
+    A competitive VEX IQ robotics team from Surrey, England — building
+    autonomous systems, engineering award-winning robots, and representing
+    the UK on the national stage.
+  </p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">1st</div>
+      <div class="hero-stat-label">Chorley Tournament</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">13th</div>
+      <div class="hero-stat-label">National Skills Rank</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">128</div>
+      <div class="hero-stat-label">Telford Full Skills</div>
+    </div>
+  </div>
+
+  <div class="hero-cta">
+    <a href="#sponsors" class="btn-primary">Become a Sponsor</a>
+    <a href="#achievements" class="btn-outline">Our Achievements</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">TOURNAMENT WINNERS <span class="ticker-sep">·</span> CHORLEY 2024</span>
+    <span class="ticker-item">13TH IN ENGLAND <span class="ticker-sep">·</span> ROBOT SKILLS</span>
+    <span class="ticker-item">TEAM 9863S <span class="ticker-sep">·</span> SURREY, ENGLAND</span>
+    <span class="ticker-item">128 AT TELFORD <span class="ticker-sep">·</span> 190 IN PRACTICE</span>
+    <span class="ticker-item">VEX IQ ROBOTICS <span class="ticker-sep">·</span> COMPETITION SEASON</span>
+    <span class="ticker-item">TOURNAMENT WINNERS <span class="ticker-sep">·</span> CHORLEY 2024</span>
+    <span class="ticker-item">13TH IN ENGLAND <span class="ticker-sep">·</span> ROBOT SKILLS</span>
+    <span class="ticker-item">TEAM 9863S <span class="ticker-sep">·</span> SURREY, ENGLAND</span>
+    <span class="ticker-item">128 AT TELFORD <span class="ticker-sep">·</span> 190 IN PRACTICE</span>
+    <span class="ticker-item">VEX IQ ROBOTICS <span class="ticker-sep">·</span> COMPETITION SEASON</span>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-label">Achievements</div>
+  <h2 class="section-title">Results on the field</h2>
+
+  <div class="achievements-grid">
+    <div class="achievement-card">
+      <span class="achievement-icon">🏆</span>
+      <div class="achievement-event">Chorley Tournament · 2024</div>
+      <div class="achievement-title">Tournament Champions</div>
+      <div class="achievement-desc">Took first place at the Chorley VEX IQ tournament, outcompeting teams from across the region with consistent driver and autonomous performance.</div>
+      <div class="achievement-num">01</div>
+    </div>
+
+    <div class="achievement-card">
+      <span class="achievement-icon">🇬🇧</span>
+      <div class="achievement-event">National Rankings · England</div>
+      <div class="achievement-title">13th in the Country</div>
+      <div class="achievement-desc">Ranked 13th nationally in skills in the VEX IQ Robot Skills challenge — placing us among the top UK teams competing for a spot at the World Championship.</div>
+      <div class="achievement-num">02</div>
+    </div>
+
+    <div class="achievement-card">
+      <span class="achievement-icon">🤖</span>
+      <div class="achievement-event">Autonomous Programming</div>
+      <div class="achievement-title">84-Point Autonomous</div>
+      <div class="achievement-desc">Achieved an 84-cactus autonomous skills run using a PID controller built from scratch — one of the most technically demanding routines at the national level.</div>
+      <div class="achievement-num">03</div>
+    </div>
+
+    <div class="achievement-card">
+      <span class="achievement-icon">⚡</span>
+      <div class="achievement-event">Driver Skills</div>
+      <div class="achievement-title">190 Practice · 128 at Telford</div>
+      <div class="achievement-desc">128 cactus in our full skills run at Telford nationals — and 190 reached in practice runs, showing exactly what this robot is capable of.</div>
+      <div class="achievement-num">04</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- VIDEO -->
+<section id="watch" style="background:#080808;padding:100px 80px;">
+  <div class="section-label">In Action</div>
+  <h2 class="section-title">Watch us compete</h2>
+
+  <div style="position:relative;max-width:900px;">
+
+    <!-- decorative corner marks -->
+    <div style="position:absolute;top:-8px;left:-8px;width:24px;height:24px;border-top:2px solid var(--gold);border-left:2px solid var(--gold);z-index:2;pointer-events:none;"></div>
+    <div style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);z-index:2;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-8px;left:-8px;width:24px;height:24px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold);z-index:2;pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-8px;right:-8px;width:24px;height:24px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);z-index:2;pointer-events:none;"></div>
+
+    <!-- screen bezel -->
+    <div style="background:#111;border:1px solid #222;border-radius:6px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.7);">
+
+      <!-- fake menu bar -->
+      <div style="background:#1a1a1a;padding:8px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #252525;">
+        <div style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></div>
+        <div style="width:11px;height:11px;border-radius:50%;background:#febc2e;"></div>
+        <div style="width:11px;height:11px;border-radius:50%;background:#28c840;"></div>
+        <div style="flex:1;margin:0 12px;background:#111;border-radius:4px;height:20px;display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#444;letter-spacing:1px;">VEX IQ SKILLS RUN · TELFORD 2025</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#333;letter-spacing:1px;">128 PTS</div>
+      </div>
+
+      <video
+        controls
+        playsinline
+        preload="metadata"
+        style="display:block;width:100%;aspect-ratio:1440/852;background:#000;"
+      >
+        <source src="robot_skills.mp4" type="video/mp4">
+        Your browser does not support the video element.
+      </video>
+    </div>
+
+    <!-- caption row -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:12px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-5);">
+        Full skills run · Telford Nationals · Team 9863S
+      </div>
+      <div style="display:flex;gap:16px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold);">128 PTS COMPETITION</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gray-5);">· 190 IN PRACTICE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-label">The Team</div>
+  <h2 class="section-title">Who we are</h2>
+
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">AM</div>
+      <div class="team-name">Arav Modgil</div>
+      <div class="team-roles">Driver · Coder · Social Media</div>
+      <div class="team-bio">Leads autonomous programming and competition driving. Responsible for the PID control systems, inertial sensor tuning, and the team's social media presence.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">SH</div>
+      <div class="team-name">Shiven</div>
+      <div class="team-roles">Builder · Designer · Strategist · Risk Specialist · Balloon Game Specialist</div>
+      <div class="team-bio">Known as <em>Tiv Tiv</em>. Designs and builds the robot chassis and mechanisms. Develops match strategy and optimises scoring efficiency each competition. The team's foremost authority on risk assessment and balloon game tactics.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">RY</div>
+      <div class="team-name">Reyansh</div>
+      <div class="team-roles">Builder · Designer · Strategist · Risk Specialist · Balloon Game Specialist</div>
+      <div class="team-bio">Known as <em>Reynash</em>. Designs and builds the robot chassis and mechanisms. Develops match strategy and optimises scoring efficiency each competition. The team's foremost authority on risk assessment and balloon game tactics.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">AG</div>
+      <div class="team-name">Aayush</div>
+      <div class="team-roles">Builder · Designer · Loader</div>
+      <div class="team-bio">Known as <em>GolGupta</em>. Specialist in robot construction and the loading-zone strategy that delivered a 128-point Telford competition run — and 190 in practice.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">AM</div>
+      <div class="team-name">Arav Mehrotra</div>
+      <div class="team-roles">Driver · Notebooker</div>
+      <div class="team-bio">Known as <em>Merotting</em>. Co-driver and keeper of the Engineering Notebook — the detailed record of every design decision, test, and iteration the team makes each season.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">RM</div>
+      <div class="team-name">Raman</div>
+      <div class="team-roles">Coach · Mentor</div>
+      <div class="team-bio">Guides the team's technical development and competition preparation, bringing experience and mentorship to every session and tournament day.</div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- STRATEGY -->
+<section id="strategy">
+  <div class="section-label">Strategy</div>
+  <h2 class="section-title">How we compete</h2>
+
+  <div class="strategy-grid">
+    <div class="strat-card">
+      <div class="strat-event">Chorley Tournament</div>
+      <div class="strat-title">Winning Strategy</div>
+      <div class="strat-score">80 <span>cactus</span></div>
+      <div class="strat-desc">Combined an 80-cactus score with two precision stacks. Used a consistent field-cycle approach that maximised reliability over pure speed.</div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-event">Telford Nationals · Driver Skills</div>
+      <div class="strat-title">Loading Zone Focus</div>
+      <div class="strat-score">128 <span>competition</span></div>
+      <div class="strat-desc">Full skills run at Telford nationals scoring 128 cactus — primarily exploiting the loading zone with fast, consistent field cycling.</div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-event">Nationals · Robot Skills Autonomous</div>
+      <div class="strat-title">PID Autonomous</div>
+      <div class="strat-score">84 <span>cactus</span></div>
+      <div class="strat-desc">A fully coded autonomous routine using PID control with the Brain inertial sensor — engineered from scratch by the team for maximum precision.</div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-event">Practice Runs · Peak</div>
+      <div class="strat-title">Practice Ceiling</div>
+      <div class="strat-score">190 <span>practice</span></div>
+      <div class="strat-desc">Our practice ceiling — 190 cactus — shows what the robot can do at full speed. Telford competition run: 128. Target for next event: close the gap.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SPONSORS -->
+<section id="sponsors">
+  <div class="section-label">Sponsorship</div>
+  <h2 class="section-title">Partner with us</h2>
+
+  <p class="sponsor-pitch">
+    THR33CROWN3D is one of England's top-ranked VEX IQ teams — currently <strong>13th nationally</strong> and competing for a place at the VEX IQ World Championship. We are a team of young engineers building real autonomous systems with PID controllers, inertial sensors, and precision mechanics.<br><br>
+    Your sponsorship directly funds <strong>competition entry fees, robot components, travel to national events,</strong> and our push toward Worlds. In return, your brand reaches a highly engaged audience of engineers, educators, and families across the UK STEM community.
+  </p>
+
+  <div class="sponsor-benefits">
+    <div class="benefit-card">
+      <div class="benefit-title">Brand Visibility</div>
+      <div class="benefit-desc">Your logo on our robot, kit, team banner, and website — seen at every UK regional tournament and national championship.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-title">STEM Association</div>
+      <div class="benefit-desc">Align your brand with the next generation of engineers, coders, and designers. VEX IQ is the world's largest robotics competition.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-title">Social Media</div>
+      <div class="benefit-desc">Featured in our competition coverage, build updates, and behind-the-scenes content across Instagram, TikTok, and YouTube.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-title">Community Impact</div>
+      <div class="benefit-desc">Support young people in Surrey developing real engineering and programming skills — a direct investment in future STEM talent.</div>
+    </div>
+  </div>
+
+  <div class="sponsor-tiers">
+    <div class="tier-card">
+      <div class="tier-name">Bronze</div>
+      <div class="tier-price">£250 <sub>/ season</sub></div>
+      <ul class="tier-features">
+        <li>Logo on team website</li>
+        <li>Mention in social media posts</li>
+        <li>Thank-you certificate</li>
+      </ul>
+    </div>
+    <div class="tier-card featured">
+      <div class="tier-name">Gold</div>
+      <div class="tier-price">£750 <sub>/ season</sub></div>
+      <ul class="tier-features">
+        <li>Logo on robot chassis</li>
+        <li>Logo on team kit &amp; banner</li>
+        <li>Featured in all social content</li>
+        <li>Dedicated sponsor post</li>
+        <li>Season progress reports</li>
+      </ul>
+    </div>
+    <div class="tier-card">
+      <div class="tier-name">Platinum</div>
+      <div class="tier-price">£1,500+ <sub>/ season</sub></div>
+      <ul class="tier-features">
+        <li>Primary logo on robot &amp; kit</li>
+        <li>Team named in your honour</li>
+        <li>Visit us at competition</li>
+        <li>Full season media package</li>
+        <li>Worlds campaign coverage</li>
+        <li>Direct team access &amp; updates</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="contact-block">
+    <div class="contact-text">
+      <h3>Let's Talk</h3>
+      <p>Interested in supporting Team 9863S? Reach out via our Google Site or social media.<br>
+      Visit: <a href="https://sites.google.com/view/threecrowned" target="_blank">sites.google.com/view/threecrowned</a></p>
+    </div>
+    <a href="https://sites.google.com/view/threecrowned/sponsors" target="_blank" class="btn-primary">Get in Touch →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">THR33CROWN3D</div>
+  <div class="footer-meta">Team 9863S · Surrey, England · VEX IQ Robotics</div>
+  <div class="footer-meta">© 2025 STC THR33CROWN3D</div>
+</footer>
+
+</body>
+</html>
